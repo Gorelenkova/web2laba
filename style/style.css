@@ -1,0 +1,297 @@
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%; /* Изменил на адаптивный размер */
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+/* Стили для header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+}
+head title {
+    font-weight: bold;
+}
+.header .logo img {
+    width: 100px;
+}
+
+.header .title h1 {
+    font-size: 36px;
+    margin: 10px 0;
+    padding: 0;
+}  
+
+ /* Стили для модального окна */
+ .modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+}
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+.modal-header {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+.modal-body {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #666;
+}
+.modal-footer {
+    text-align: right;
+}
+.close-btn {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.close-btn:hover {
+    background-color: #0056b3;
+}
+.header .login-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.header .login-buttons input[type="submit"],
+.header .login-buttons button {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    padding: 10px 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.header .login-buttons .divider {
+    color: #000;
+    margin: 10px 10px;
+}
+
+/* Стили для навигации */
+.nav {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px ;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #000;
+    padding: 0px 30px;
+    margin: 0 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    text-align: left;
+}
+
+/* Стили для контента */
+.container .content h2 {
+    color: #333;
+}
+
+
+.container .content p {
+    color: #fff;
+    text-align: left;
+    font-size: 16px;
+    margin: 0 0 15px; /* Отступы снизу между абзацами */
+}
+
+/* Стили для боковой панели */
+.container .sidebar {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.container .sidebar a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+}
+
+.container .sidebar img {
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* Стили для баннеров */
+.banner,.banner4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden; /* Добавил, чтобы изображения не вылезали за пределы контейнера */
+    padding: 0;
+}
+
+.banner a,.banner4 a {
+    flex: 1;
+    padding: 0px;
+    margin: 0;
+    /* Расстояние между изображениями */
+}
+
+.banner img {
+    width: 100%; /* Заполнить всю доступную ширину контейнера */
+    height: auto; /* Поддерживать соотношение сторон */
+}
+a {
+    text-decoration: none;
+    color: #000;
+}
+.container .content p {
+    color: #333; /* Изменил цвет текста на читаемый на белом фоне */
+    font-size: 14px;
+    margin: 0 0 15px;
+    padding-left: 30px; /* Добавил отступ слева */
+}
+.info-bar {
+    background-color: #fff;
+    color: #333;
+    margin-left: 0px;
+    text-align: left;
+    padding: 10px;
+    font-size: 16px;
+}
+.catalog {
+    display: grid; /* Используем CSS Grid для организации товаров */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Определите количество столбцов и их размер */
+    gap: 20px; /* Отступы между товарами */
+}
+.product {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    margin-left: 30px;
+    background-color: #fff;
+}
+
+.product img {
+    max-width: 100%;
+}
+
+.product h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.product p {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.product .price {
+    font-weight: bold;
+}
+
+.product button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.center-text {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+.marquee-content {
+    white-space: nowrap;
+    display: inline-block;
+}
+.marquee-content img {
+    margin-right: 10px; /* Добавьте нужный вам отступ между изображениями */
+}
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #061a07;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #000000;
+}
+/* Стили для footer */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #fff;
+    color: #333;
+    font-style: bold;
+    font-size: 16px;
+}
+.text-container {
+    margin-left: 20px; /* Отступ слева для текста */
+}
+
+.text-container h2,
+.text-container h3 {
+    color: #333; /* Цвет заголовков */
+}
+
+.text-container ul {
+    list-style-type: disc; /* Стиль маркированного списка */
+    margin-left: 20px; /* Отступ слева для списка */
+}
+
+.text-container ul li {
+    color: #333; /* Цвет текста пунктов списка */
+    font-size: 16px; /* Размер шрифта */
+    margin-bottom: 5px; /* Отступ между пунктами списка */
+}
+
+.text-container p {
+    color: #333; /* Цвет текста абзацев */
+    font-size: 16px; /* Размер шрифта */
+    margin-bottom: 15px; /* Отступ между абзацами */
+}
+

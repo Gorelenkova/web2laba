@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Сити-Класс</title>
+    <link rel="stylesheet" type="text/css" href="style/style1.css">
+    <link rel="icon" type="image/x-icon" href="photo/yarlik.jpg">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="photo/yarlik.jpg">
+    <style>
+        /* Стили для вашего слайдера */
+        .slider-container {
+            width: 50%; /* Ширина контейнера */
+            margin: 0 auto;
+        }
+        .slider {
+            display: flex;
+        }
+        .slider img {
+            width: 50px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">    
+        <div class="logo">
+            <img width="100px" src="photo/logo.png" alt="Логотип">
+        </div>
+        <div class="title">
+            <h1><a href="index.html">Сити-Класс</a></h1>
+        </div>
+        <div class="cart">
+            <button type="button" onclick="goToCart()">Корзина</button>
+        </div>
+        <script>
+            function goToCart() {
+                // Переход на страницу cart.html
+                window.location.href = 'cart.html';
+            }
+        </script>
+    </div>
+    <div class="nav">
+        <a href="woman.html">Женская обувь</a>
+        <a href="man.html">Мужская обувь</a>
+        <a href="bags.html">Сумки</a>
+        <a href="acc.html">Аксессуары</a>
+    </div>
+      
+    <div class ="text">  
+        <h2>Женская обувь</h2>
+    </div>
+    <input id="searchbar" onkeyup="search_product()" type="text" name="search" placeholder="Поиск товара..">
+    <script src="search.js"></script> 
+    <div class="content">
+        <div class="sidebar">
+            <h3>Категории </h3>
+            <ul>
+                <li><a href="#">Ботинки</a></li>
+                <li><a href="#">Кроссовки</a></li>
+                <li><a href="#">Туфли</a></li>
+            </ul>
+        </div>
+        <div class="product" id="product-1">
+            
+            <img src="photo/botinki1.jpg" alt="Ботинки" width="250px">
+            <h3>Ботинки</h3>
+            <p>Размеры: 36, 37, 38</p>
+            <span class="price">Цена: 9999</span>
+            <button onclick="addToCart(2)">Добавить в корзину</button>
+        </div>
+        <div class="product" id="product-2">
+            <img src="photo/sapogi.jpg" alt="Сапоги" width="250px">
+            <h3>Сапоги</h3>
+            <p>Размеры: 38, 39, 40</p>
+            <span class="price">Цена: 7999</span>
+            <button onclick="addToCart(9)">Добавить в корзину</button>
+        </div>
+        <div class="product" id="product-3">
+            <img src="photo/botinki3.jpg" alt="Сапоги" width="250px">
+            <h3>Сапоги</h3>
+            <p>Размеры: 38, 39, 40</p>
+            <span class="price">Цена: 7999</span>
+            <button onclick="addToCart(11)">Добавить в корзину</button>
+        </div>
+        <div class="product" id="product-4">
+            <img src="photo/botinki2.jpg" alt="Сапоги" width="250px">
+            <h3>Сапоги</h3>
+            <p>Размеры: 38, 39, 40</p>
+            <span class="price">Цена: 7999</span>
+            <button onclick="addToCart(14)">Добавить в корзину</button>
+        </div>        
+    </div>
+    
+    <script>
+        function addToCart(productId) {
+            // Получаем userId из локального хранилища, предположим, что он уже сохранен после входа пользователя
+            const userId = localStorage.getItem("userId");
+
+            // Формируем URL для POST-запроса
+            const url = `https://localhost:7129/api/Product/AddProductToCart?userId=${userId}&productId=${productId}`;
+
+            // Выполняем POST-запрос    
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                // Отправляем пустое тело запроса, так как параметры уже в URL
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.statusCode === 200) {
+                    console.log("Продукт добавлен в корзину!");
+                    alert("Продукт добавлен в корзину!");
+                } else {
+                    console.error("Произошла ошибка:", data.description);
+                    alert(`Ошибка: ${data.description}`);
+                }
+            })
+            .catch(error => {
+                console.error("Произошла ошибка при выполнении запроса:", error);
+                alert("Произошла ошибка при выполнении запроса.");
+            });
+        }
+    </script>
+    <footer class="footer">
+        Все права защищены законодательством Российской Федерации ©
+    </footer>
+    
+    <script>
+        $(document).ready(function(){
+            $('.slider').slick({
+                infinite: true,
+                slidesToShow: 3, // Количество слайдов для отображения одновременно
+                slidesToScroll: 1, // Количество слайдов для прокрутки одновременно
+                prevArrow: '<button class="prev">Предыдущий</button>',
+                nextArrow: '<button class="next">Следующий</button>',
+            });
+        });
+    </script>
+    <script>
+         async function fetchProducts() {
+    try {
+        const response = await fetch('http://localhost:5235/api/Product/GetAllProduct');
+        if (!response.ok) {
+            throw new Error('Ошибка HTTP ' + response.status);
+        }
+        const data = await response.json();
+        
+        // Обработка полученных данных и отображение на странице
+        data.data.forEach((product, index) => {
+            const productItem = document.getElementById('product-' + (index + 1)); // product-1, product-2, и т.д.
+            if (productItem) {
+                productItem.querySelector('img').src = product.imageUrl1;
+                productItem.querySelector('h3').textContent = product.name;
+                productItem.querySelector('p').textContent = 'Размеры: ' + product.description;
+                productItem.querySelector('.price').textContent = 'Цена: ' + product.price;
+            }
+        });
+    } catch (error) {
+        console.error('Произошла ошибка:', error.message);
+    }
+}
+
+// Вызов функции для получения и отображения данных
+fetchProducts();
+      
+        // Вызов функции для получения и отображения данных
+      </script>
+</body>
+
+</html>

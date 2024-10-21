@@ -1,0 +1,76 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+}
+
+#main-holder {
+    width: 60%;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#reviews-heading {
+    text-align: center;
+    color: #333;
+}
+
+#review-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.review-form-field {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#review-form-submit {
+    width: 80%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#review-form-submit:hover {
+    background-color: #000000;
+}
+
+#review-message {
+    text-align: center;
+    font-weight: bold;
+    color: #e70101;
+}
+
+#reviews-container {
+    margin-top: 20px;
+}
+
+.response {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.user-info {
+    font-style: italic;
+    color: #555;
+}
+
+.response-text {
+    margin-top: 10px;
+    color: #333;
+}

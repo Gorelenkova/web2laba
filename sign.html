@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style/styleSign.css">
+</head>
+<body>
+    <main id="main-holder">
+        <h1 id="Sign">Вход</h1>
+        <form id="login-form">
+          <input type="text" name="email" id="email-field" class="login-form-field" placeholder="Адрес электронной почты">
+          <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Пароль">
+          <input type="submit" value="Войти" id="login-form-submit">
+        </form>
+        <p id="login-message"></p> <!-- Этот элемент для сообщения о входе -->
+    </main>
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email-field").value;
+            const password = document.getElementById("password-field").value;
+
+            const url = `https://localhost:7129/api/UserAuth/Login?email=${email}&password=${password}`;
+
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "accept": "application/json"
+                }
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    console.log("Логин или пароль неверны.");
+                    updateLoginMessage("Логин или пароль неверны.");
+                } else {
+                    console.error("Произошла ошибка при выполнении запроса.");
+                    updateLoginMessage("Произошла ошибка при выполнении запроса.");
+                }
+            })
+            .then(data => {
+                if (data && data.data) {
+                    console.log("Вы вошли!");
+                    const newUserId = data.data + 1;
+                    // Сохраняем ID пользователя в localStorage
+                    localStorage.setItem("userId", newUserId);
+
+                    // Выводим ID в консоль
+                    console.log("ID пользователя:", newUserId);
+
+                    updateLoginMessage("Вы вошли!");
+                }
+            })
+            .catch(error => {
+                console.error("Произошла ошибка при выполнении запроса.", error);
+                updateLoginMessage("Произошла ошибка при выполнении запроса.");
+            });
+        });
+
+        function updateLoginMessage(message) {
+            const loginMessage = document.getElementById("login-message");
+            loginMessage.textContent = message;
+        }
+    </script>
+</body>
+</html>

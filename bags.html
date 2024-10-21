@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Сити-Класс</title>
+    <link rel="stylesheet" type="text/css" href="style/style1.css">
+    <link rel="icon" type="image/x-icon" href="photo/yarlik.jpg">
+</head>
+
+<body>
+    <div class="header">    
+        <div class="logo">
+            <img width="100px" src="photo/logo.png" alt="Логотип">
+        </div>
+        <div class="title">
+            <h1><a href="index.html">Сити-Класс</a></h1>
+        </div>
+        <div class="cart">
+            <button type="button" onclick="goToCart()">Корзина</button>
+        </div>
+        <script>
+            function goToCart() {
+                // Переход на страницу cart.html
+                window.location.href = 'cart.html';
+            }
+        </script>
+    </div>
+    <div class="nav">
+        <a href="woman.html">Женская обувь</a>
+        <a href="man.html">Мужская обувь</a>
+        <a href="bags.html">Сумки</a>
+        <a href="acc.html">Аксессуары</a>
+    </div>
+    <div class="text">  
+        <h2>Сумки</h2>
+    </div>
+    <input id="searchbar" onkeyup="search_product()" type="text" name="search" placeholder="Поиск товара..">
+    <script src="search.js"></script> 
+    <div class="content">
+        <div class="sidebar">
+            <h3>Категории</h3>
+            <ul>
+                <li><a href="#">Новинки</a></li>
+                <li><a href="#">Распродажа</a></li>
+                <li><a href="#">Сумки</a></li>
+                <li><a href="#">Рюкзаки</a></li>
+            </ul>
+        </div>
+        
+        <!-- Product cards -->
+        <div class="product" id="product-1">
+            <img src="photo/sumka.jpg" alt="Сумка">
+            <h3>Сумка</h3>
+            <span class="price">Цена: 6300</span>
+            <button onclick="addToCart(24)">Добавить в корзину</button>
+            <button onclick="showModal(1)">Подробнее</button>
+        </div>
+        
+        <div class="product" id="product-2">
+            <img src="photo/sumka1.jpg" alt="Сумка">
+            <h3>Сумка</h3>
+            <span class="price">Цена: 7999</span>
+            <button onclick="addToCart(26)">Добавить в корзину</button>
+            <button onclick="showModal(2)">Подробнее</button>
+        </div>
+        
+        <div class="product" id="product-3">
+            <img src="photo/sumka2.jpg" alt="Сумка">
+            <h3>Сумка</h3>
+            <span class="price">Цена: 12000</span>
+            <button onclick="addToCart(30)">Добавить в корзину</button>
+            <button onclick="showModal(3)">Подробнее</button>
+        </div>
+
+        <div class="product" id="product-4">
+            <img src="photo/sumka3.jpg" alt="Сумка">
+            <h3>Сумка</h3>
+            <span class="price">Цена: 4200</span>
+            <button onclick="addToCart(31)">Добавить в корзину</button>
+            <button onclick="showModal(4)">Подробнее</button>
+        </div>
+        
+        <!-- Modal structure -->
+        <div id="modal-1" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal(1)">&times;</span>
+                <h3>Сумка</h3>
+                <p>Цена: 6300</p>
+                <p>Страна производитель: Италия</p>
+                <p>Описание: Кожаная сумка высокого качества.</p>
+            </div>
+        </div>
+
+        <div id="modal-2" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal(2)">&times;</span>
+                <h3>Сумка</h3>
+                <p>Цена: 7999</p>
+                <p>Страна производитель: Франция</p>
+                <p>Описание: Сумка из натуральной кожи, стильная и удобная.</p>
+            </div>
+        </div>
+
+        <div id="modal-3" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal(3)">&times;</span>
+                <h3>Сумка</h3>
+                <p>Цена: 12000</p>
+                <p>Страна производитель: Испания</p>
+                <p>Описание: Эксклюзивная дизайнерская сумка, с ручной отделкой.</p>
+            </div>
+        </div>
+
+        <div id="modal-4" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal(4)">&times;</span>
+                <h3>Сумка</h3>
+                <p>Цена: 4200</p>
+                <p>Страна производитель: Россия</p>
+                <p>Описание: Практичная и удобная сумка для повседневного использования.</p>
+            </div>
+        </div>
+
+        <script>
+            // Show modal by id
+            function showModal(productId) {
+                const modal = document.getElementById('modal-' + productId);
+                modal.style.display = "block";
+            }
+
+            // Close modal by id
+            function closeModal(productId) {
+                const modal = document.getElementById('modal-' + productId);
+                modal.style.display = "none";
+            }
+
+            // Close modal if clicked outside the content
+            window.onclick = function(event) {
+                const modals = document.getElementsByClassName('modal');
+                for (let i = 0; i < modals.length; i++) {
+                    if (event.target === modals[i]) {
+                        modals[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                max-width: 400px;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+    </div>
+
+    <footer class="footer">
+        Все права защищены законодательством Российской Федерации ©
+    </footer>
+</body>
+
+</html>

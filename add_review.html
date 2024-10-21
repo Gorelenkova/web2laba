@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы</title>
+    <link rel="stylesheet" href="style/styleReview.css">
+</head>
+<body>
+    <main id="main-holder">
+        <h1 id="reviews-heading">Отзывы</h1>
+
+        <!-- Форма для добавления отзыва -->
+        <form id="review-form">
+          <textarea name="comment" id="comment-field" class="review-form-field" placeholder="Введите ваш отзыв" required></textarea>
+          <input type="submit" value="Добавить отзыв" id="review-form-submit">
+        </form>     
+
+        <p id="review-message"></p> <!-- Этот элемент для сообщения о добавлении отзыва -->
+
+        <!-- Контейнер для отзывов -->
+        <div id="reviews-container"></div>
+    </main>
+
+    <script>
+        function updateReviewMessage(message) {
+            const reviewMessage = document.getElementById("review-message");
+            reviewMessage.textContent = message;
+        }
+
+        function fetchReviews() {
+            const url = "http://localhost:7129/api/Response/AddResponse";
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Ошибка HTTP: ${response.status}`);
+                    }
+                    return response.json(); // Возвращаем JSON, так как сервер должен возвращать JSON
+                })
+                .then(data => {
+                    const reviewsContainer = document.getElementById("reviews-container");
+                    reviewsContainer.innerHTML = ""; // Очистить контейнер перед обновлением
+
+                    if (data && data.data) {
+                        data.data.forEach(response => {
+                            const responseElement = document.createElement("div");
+                            responseElement.classList.add("response");
+                            responseElement.innerHTML = `<div class="user-info">Пользователь #${response.userId}</div>
+                                                      <div class="response-text">${response.comment}</div>`;
+                            reviewsContainer.appendChild(responseElement);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error(`Произошла ошибка при получении отзывов: ${error.message}`);
+                });
+        }
+
+        document.getElementById("review-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const comment = document.getElementById("comment-field").value;
+            const userId = localStorage.getItem("userId");
+
+            const url = "https://localhost:7129/api/Response/AddResponse";
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "accept": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    comment: comment
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.statusCode === 200) {
+                    console.log("Отзыв успешно добавлен!");
+                    updateReviewMessage("Отзыв успешно добавлен!");
+                    fetchReviews(); // Обновить отзывы после успешного добавления
+                }
+            })
+            .catch(error => {
+                console.error("Произошла ошибка при добавлении отзыва.", error);
+                updateReviewMessage("Произошла ошибка при добавлении отзыва.");
+            });
+        });
+
+        // Вызов функции fetchReviews для получения и отображения отзывов при загрузке страницы
+        fetchReviews();
+    </script>
+</body>
+</html>

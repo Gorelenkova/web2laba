@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .review-container {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .review {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            font-style: italic;
+            color: #555;
+        }
+
+        .review-text {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Отзывы</h1>
+
+    <div class="review-container" id="reviewsContainer">
+        <!-- Отзывы будут добавлены сюда -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Выполняем GET-запрос при загрузке страницы
+            fetch('https://localhost:7129/api/Response/GetAllResponse')
+                .then(response => response.json())
+                .then(data => {
+                    const reviewsContainer = document.getElementById('reviewsContainer');
+
+                    // Добавляем отзывы на страницу
+                    data.data.forEach(review => {
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.classList.add('review');
+
+                        const userInfoDiv = document.createElement('div');
+                        userInfoDiv.classList.add('user-info');
+                        userInfoDiv.textContent = `${review.name}, ${review.email}`;
+                        
+                        const reviewTextDiv = document.createElement('div');
+                        reviewTextDiv.classList.add('review-text');
+                        reviewTextDiv.textContent = review.message;
+
+                        reviewDiv.appendChild(userInfoDiv);
+                        reviewDiv.appendChild(reviewTextDiv);
+
+                        reviewsContainer.appendChild(reviewDiv);
+                    });
+                })
+                .catch(error => console.error('Ошибка при выполнении GET-запроса:', error));
+        });
+    </script>
+</body>
+</html>
