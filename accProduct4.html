@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ботинки</title>
+    <link rel="stylesheet" type="text/css" href="style/style1.css">
+    <link rel="icon" type="image/x-icon" href="photo/yarlik.jpg">
+    <style>
+        .product-page {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-page img {
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        .product-info {
+            flex: 1;
+            padding-left: 20px;
+        }
+
+        .product-info h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .product-info .price {
+            font-size: 24px;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .product-info button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #040404;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .product-info button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <img width="100px" src="photo/logo.png" alt="Логотип">
+        </div>
+        <div class="title">
+            <h1><a href="index.html">Сити-Класс</a></h1>
+        </div>
+        <div class="cart">
+            <button type="button" onclick="goToCart()">Корзина</button>
+        </div>
+        <script>
+            function goToCart() {
+                window.location.href = 'cart.html';
+            }
+        </script>
+    </div>
+
+    <div class="nav">
+        <a href="woman.html">Женская обувь</a>
+        <a href="man.html">Мужская обувь</a>
+        <a href="bags.html">Сумки</a>
+        <a href="acc.html">Аксессуары</a>
+    </div>
+
+    <div class="product-page">
+        <img src="photo/termo1.jpg" alt="Подарок">
+
+        <!-- Информация о товаре справа -->
+        <div class="product-info">
+            <h2>Термобелье</h2>
+            <p class="price"><strong>Цена: 300 руб.</strong></p>
+            <p><strong>Описание:</strong> Термобелье носки зимние. Производство: Китай.</p>
+            <button onclick="addToCart(15)">Добавить в корзину</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Все права защищены законодательством Российской Федерации ©
+    </footer>
+
+    <script>
+        function addToCart(productId) {
+            const userId = localStorage.getItem("userId");
+            const url = `https://localhost:7129/api/Product/AddProductToCart?userId=${userId}&productId=${productId}`;
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.statusCode === 200) {
+                    alert("Продукт добавлен в корзину!");
+                } else {
+                    alert(`Ошибка: ${data.description}`);
+                }
+            })
+            .catch(error => {
+                alert("Произошла ошибка при выполнении запроса.");
+            });
+        }
+    </script>
+</body>
+
+</html>
