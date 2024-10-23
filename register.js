@@ -5,10 +5,10 @@ document.getElementById("registration-form").addEventListener("submit", function
     const data = {
         name: formData.get("name"),
         Email: formData.get("username"),
-        Password: formData.get("password")
+        Password: formData.get("password"),
+        Phone: formData.get("phone")  // Capture the phone number from the form
     };
 
-    
     fetch("http://localhost:5235/api/UserAuth/Register", {
         method: "POST",
         headers: {
@@ -22,10 +22,8 @@ document.getElementById("registration-form").addEventListener("submit", function
             console.log("Ошибки валидации Email:", result.errors.Email);
         } else if (result) {
             console.log("Данные успешно добавлены в базу данных", result);
-            
         } else {
             console.error("Произошла ошибка при добавлении данных в базу данных");
         }
-        
     });
 });
