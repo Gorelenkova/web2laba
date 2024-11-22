@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration</title>
+  <title>Регистрация</title>
   <link rel="stylesheet" href="style/style2.css">
   <script defer src="register.js"></script>
 </head>
@@ -14,10 +14,10 @@
     <h1 id="login-header">Регистрация</h1>
     
     <form id="registration-form">
-      <input type="text" name="name" id="name-field" class="login-form-field" placeholder="Имя">
-      <input type="text" name="username" id="username-field" class="login-form-field" placeholder="Почта">
-      <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Пароль">
-      <input type="text" name="phone" id="phone-field" class="login-form-field" placeholder="Телефон"> <!-- New phone number input -->
+      <input type="text" name="name" id="name-field" class="login-form-field" placeholder="Имя" required>
+      <input type="email" name="username" id="username-field" class="login-form-field" placeholder="Почта" required>
+      <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Пароль" required>
+      <input type="text" name="phone" id="phone-field" class="login-form-field" placeholder="Телефон" required>
       <input type="submit" value="Зарегистрироваться" id="login-form-submit">
     </form>
     
