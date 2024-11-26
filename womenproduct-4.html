@@ -95,7 +95,7 @@
             <p>Размеры: 38, 39, 40</p>
             <p class="price"><strong>Цена: 7999 руб.</strong></p>
             <p><strong>Описание:</strong> Зимние сапоги из натуральной кожи и меха. Подошва из резины для устойчивости на скользкой поверхности. Произведено в СССР.</p>
-            <button onclick="addToCart(9)">Добавить в корзину</button>
+            <button onclick="addToCart(16)">Добавить в корзину</button>
         </div>
     </div>
 
@@ -104,30 +104,56 @@
     </footer>
 
     <script>
+        // Функция для проверки, вошел ли пользователь
+        function isUserLoggedIn() {
+            return localStorage.getItem("userId") !== null;
+        }
+       
+        // Функция для добавления продукта в корзину
         function addToCart(productId) {
-            const userId = localStorage.getItem("userId");
-            const url = `https://localhost:7129/api/Product/AddProductToCart?userId=${userId}&productId=${productId}`;
+    let userId = localStorage.getItem("userId");
 
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.statusCode === 200) {
-                    alert("Продукт добавлен в корзину!");
+    // Логирование userId для проверки
+    console.log("Текущий userId:", userId);
+
+    if (!userId) {
+        alert("Вы не авторизованы! Пожалуйста, войдите в свой аккаунт.");
+        return;
+    }
+
+    fetch(`http://localhost:8080/cart/add?userId=${userId}&productId=${productId}`, {
+        method: "POST"
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Товар добавлен в корзину!");
+        } else {
+            alert("Ошибка при добавлении товара в корзину.");
+        }
+    })
+    .catch(error => {
+        console.error("Ошибка:", error);
+    });
+}
+
+        // Функция для обновления состояния кнопок
+        function updateButtonStates() {
+            const buttons = document.querySelectorAll(".add-to-cart-btn");
+            buttons.forEach(button => {
+                if (isUserLoggedIn()) {
+                    button.disabled = false;
+                    button.title = "";
                 } else {
-                    alert(`Ошибка: ${data.description}`);
+                    button.disabled = true;
+                    button.title = "Чтобы добавить товар в корзину, войдите или зарегистрируйтесь.";
                 }
-            })
-            .catch(error => {
-                alert("Произошла ошибка при выполнении запроса.");
             });
         }
+    
+        // Обновить состояние кнопок при загрузке страницы
+        document.addEventListener("DOMContentLoaded", () => {
+            updateButtonStates();
+        });
     </script>
 </body>
 
