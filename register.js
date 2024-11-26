@@ -1,6 +1,3 @@
-window.onload = function () {
-    localStorage.clear();
-};
 document.getElementById("registration-form").addEventListener("submit", function (event) {
     event.preventDefault(); // Останавливаем стандартное поведение формы
 
@@ -19,45 +16,33 @@ document.getElementById("registration-form").addEventListener("submit", function
         },
         body: JSON.stringify(data),
     })
-    .then((response) => {
+    .then(response => {
         if (!response.ok) {
-            return response.text().then((message) => {
-                throw new Error(message || "Неизвестная ошибка");
+            return response.json().then(message => {
+                throw new Error(message.message || "Произошла ошибка");
             });
         }
-        return response.text(); // Возвращает текст успешной регистрации
+        return response.json(); // Обрабатываем JSON-ответ от сервера
     })
-    .then((message) => {
-        console.log("Успешно зарегистрирован:", message);
+    .then(data => {
+        console.log("Успешно зарегистрирован:", data.message);
 
-        // Убираем сообщение об ошибке, если оно есть
-        document.getElementById("error-message").style.display = "none";
+        // Сохраняем userId в localStorage
+        localStorage.setItem("userId", data.userId);
+        console.log("UserId сохранен:", data.userId);
 
-        // Показываем сообщение об успехе
-        const successMessageElement = document.getElementById("success-message");
-        successMessageElement.textContent = "Регистрация прошла успешно! Добро пожаловать!";
-        successMessageElement.style.display = "block";
+        // Показываем сообщение об успешной регистрации
+        alert("Регистрация прошла успешно! Добро пожаловать!");
 
-        // Очищаем поля формы
-        document.getElementById("registration-form").reset();
+        // Перенаправляем на главную страницу
+        window.location.href = "index.html"; // Укажите путь к главной странице
     })
-    .catch((error) => {
-        console.error("Ошибка регистрации:", error.message);
-
-        // Убираем сообщение об успехе, если оно есть
-        const successMessageElement = document.getElementById("success-message");
-        successMessageElement.style.display = "none";
+    .catch(error => {
+        console.error("Ошибка регистрации:", error);
 
         // Показываем сообщение об ошибке
         const errorMessageElement = document.getElementById("error-message");
-        if (error.message.includes("already in use")) {
-            errorMessageElement.textContent = "Этот email уже зарегистрирован. Пожалуйста, используйте другой.";
-        } else {
-            errorMessageElement.textContent = "Этот email уже зарегистрирован. Пожалуйста, используйте другой.";
-        }
+        errorMessageElement.textContent = error.message || "Произошла ошибка. Попробуйте еще раз.";
         errorMessageElement.style.display = "block";
-
-        // Очищаем поля формы
-        document.getElementById("registration-form").reset();
     });
 });
