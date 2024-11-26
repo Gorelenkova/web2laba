@@ -30,6 +30,9 @@
     </script>
 </head>    
 <body>
+
+
+    
     <div class="header">
         <div class="logo">
             <img width="100px" src="photo/logo.png" alt="Логотип" width="100" height="100">
@@ -39,6 +42,8 @@
         </div>
         <div class="login-buttons">
             <a href="sign.html"><button type="button">Вход</button></a>
+            <span class="divider"></span>
+            <button id="logout-button" type="button">Выход</button>
             <span class="divider"></span>
             <a href="Register.html"><button type="button">Регистрация</button></a>
         </div>
@@ -98,21 +103,6 @@
         <p>Хотите купить обувь со скидкой? Посетите рубрики <strong>Распродажа</strong> и <strong>Спецпредложения</strong>.</p>
     </div>
 
-    <!-- Новый блок с баннерами рекламы
-    <div class="ad-banners">
-       
-        <div class="banner-item">
-            <a href="https://kari.com/product/W2177469/?blockId=aae8242f-58b6-4332-967d-c7d9739a9a74">
-                <img src="photo/r1.jpg" alt="Реклама 1" width="200" height="200">
-            </a>
-        </div>
-        <div class="banner-item">
-            <a href="https://kari.com/product/M5257929/?blockId=aae8242f-58b6-4332-967d-c7d9739a9a74">
-                <img src="photo/r2.jpg" alt="Реклама 2" width="200" height="200">
-            </a>
-        </div>
-       
-    </div> -->
 
     <div class="container">
         <h2>Сити Класс – интернет-магазин недорогой обуви</h2>
@@ -145,7 +135,30 @@
             </div>
         </div>
     </div>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const logoutButton = document.getElementById("logout-button");
+    
+            // Проверяем, авторизован ли пользователь, и показываем кнопку выхода, если это так
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+                logoutButton.style.display = "inline-block"; // Показываем кнопку "Выход"
+            } else {
+                logoutButton.style.display = "none"; // Скрываем кнопку, если пользователь не авторизован
+            }
+    
+            // Обработчик клика по кнопке выхода
+            if (logoutButton) {
+                logoutButton.addEventListener("click", function () {
+                    localStorage.removeItem("userId");
+                    localStorage.removeItem("userEmail");
+                    alert("Вы вышли из системы.");
+                    window.location.href = "sign.html"; // Перенаправляем на страницу входа
+                });
+            }
+        });
+    </script>
+git    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const contactsButton = document.getElementById("contacts-button");
