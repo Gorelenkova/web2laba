@@ -1,3 +1,6 @@
+window.onload = function () {
+    localStorage.clear();
+};
 document.getElementById("registration-form").addEventListener("submit", function (event) {
     event.preventDefault(); // Останавливаем стандартное поведение формы
 

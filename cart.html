@@ -1,1 +1,95 @@
-<h1>Корзина</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="style/styleCart.css">
+</head>
+<body>
+    <main id="main-holder">
+        <h1 id="cart-title">Корзина</h1>
+
+        <!-- Секция для товаров в корзине -->
+        <div id="cart-items">
+            <p id="empty-cart-message">Ваша корзина пуста. Добавьте товары!</p>
+            <ul id="cart-list"></ul>
+        </div>
+
+        <!-- Кнопка оформления заказа -->
+        <button id="checkout-button" style="display: none;" onclick="proceedToCheckout()">Оформить заказ</button>
+    </main>
+
+    <script>
+        // Проверка входа пользователя
+        function isAuthenticated() {
+            return !!localStorage.getItem("authToken");
+        }
+
+        // Функция загрузки корзины
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cartList = document.getElementById("cart-list");
+            const emptyMessage = document.getElementById("empty-cart-message");
+            const checkoutButton = document.getElementById("checkout-button");
+
+            // Очищаем список перед обновлением
+            cartList.innerHTML = "";
+
+            if (cart.length > 0) {
+                emptyMessage.style.display = "none";
+                checkoutButton.style.display = "block";
+
+                cart.forEach(item => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <span>Товар ID: ${item.id}, Количество: ${item.quantity}</span>
+                        <button onclick="removeItem(${item.id})">Удалить</button>
+                    `;
+                    cartList.appendChild(li);
+                });
+            } else {
+                emptyMessage.style.display = "block";
+                checkoutButton.style.display = "none";
+            }
+        }
+
+        // Добавление товара в корзину
+        function addToCart(productId) {
+            if (!isAuthenticated()) {
+                alert("Пожалуйста, войдите, чтобы добавлять товары в корзину.");
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id: productId, quantity: 1 });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+            alert("Товар добавлен в корзину!");
+        }
+
+        // Удаление товара
+        function removeItem(itemId) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        // Оформление заказа
+        function proceedToCheckout() {
+            alert("Оформление заказа. Пока что это заглушка!");
+        }
+
+        // Загружаем корзину при загрузке страницы
+        loadCart();
+    </script>
+</body>
+</html>
