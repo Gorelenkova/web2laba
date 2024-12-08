@@ -46,64 +46,31 @@
                 <li><a href="#">Аксессуары</a></li>
             </ul>
         </div>
-        <div class="product" id="product-1">
+        <div class="product" id="product-21">
             <img src="photo/podarok1.jpg" alt="Ботинки" onclick="window.location.href='accProduct1.html'">
             <h3>Подарочный сертификат</h3>
             <span class="price">Цена: 3000</span>
             <button onclick="addToCart(21)">Добавить в корзину</button>
         </div>
-        <div class="product" id="product-2">
+        <div class="product" id="product-22">
             <img src="photo/podarok2.jpg" alt="Сапоги" onclick="window.location.href='accProduct2.html'">
             <h3>Подарочный сертификат</h3>
             <span class="price">Цена: 2000</span>
             <button onclick="addToCart(22)">Добавить в корзину</button>
         </div>
-        <div class="product" id="product-3">
+        <div class="product" id="product-23">
             <img src="photo/termo.jpg" alt="Сапоги" onclick="window.location.href='accProduct3.html'">
             <h3>Термобелье</h3>
             <span class="price">Цена: 1200</span>
             <button onclick="addToCart(23)">Добавить в корзину</button>
         </div>
-        <div class="product" id="product-4">
+        <div class="product" id="product-24">
             <img src="photo/termo1.jpg" alt="Сапоги"  onclick="window.location.href='accProduct4.html'">
             <h3>Термобелье</h3>
             <span class="price">Цена: 300</span>
             <button onclick="addToCart(24)">Добавить в корзину</button>
         </div>
-        <!-- <script>
-            function addToCart(productId) {
-                // Получаем userId из локального хранилища, предположим, что он уже сохранен после входа пользователя
-                const userId = localStorage.getItem("userId");
-    
-                // Формируем URL для POST-запроса
-                const url = `https://localhost:7129/api/Product/AddProductToCart?userId=${userId}&productId=${productId}`;
-    
-                // Выполняем POST-запрос    
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    // Отправляем пустое тело запроса, так как параметры уже в URL
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.statusCode === 200) {
-                        console.log("Продукт добавлен в корзину!");
-                        alert("Продукт добавлен в корзину!");
-                    } else {
-                        console.error("Произошла ошибка:", data.description);
-                        alert(`Ошибка: ${data.description}`);
-                    }
-                })
-                .catch(error => {
-                    console.error("Произошла ошибка при выполнении запроса:", error);
-                    alert("Произошла ошибка при выполнении запроса.");
-                });
-            }
-        </script> -->
+        
     </div>
     <footer class="footer">
         Все права защищены законодательством Российской Федерации ©
@@ -140,7 +107,43 @@
         console.error("Ошибка:", error);
     });
 }
+async function loadProducts() {
+    try {
+        // Запрос данных с сервера
+        const response = await fetch("http://localhost:8080/api/products/accessory");
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки продуктов");
+        }
 
+        const products = await response.json(); // Получаем данные продуктов
+        console.log("Загруженные продукты:", products); // Логируем для проверки
+
+        // Обновляем содержимое страницы, только если продукты загружены
+        if (products && products.length > 0) {
+            products.forEach(product => {
+    const productElement = document.getElementById(`product-${product.id}`);
+    if (productElement) {
+        // Обновление названия продукта
+        productElement.querySelector("h3").textContent = product.product_name;
+
+        // Обновление цены
+        productElement.querySelector(".price").textContent = `Цена: ${product.price}`;
+
+        
+    }
+});
+
+        } else {
+            console.error("Продукты не найдены или некорректные данные");
+        }
+    } catch (error) {
+        console.error("Ошибка:", error);
+        alert("Не удалось загрузить продукты.");
+    }
+}
+
+// Перезапрашивать данные при загрузке страницы
+document.addEventListener("DOMContentLoaded", loadProducts);
         // Функция для обновления состояния кнопок
         function updateButtonStates() {
             const buttons = document.querySelectorAll(".add-to-cart-btn");
