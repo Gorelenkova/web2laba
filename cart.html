@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Корзина</title>
     <link rel="stylesheet" href="style/styleCart.css">
+    <style>
+        /* Стили для кнопки удаления */
+        .delete-button {
+            background-color: #000; /* Черный фон */
+            color: white; /* Белый текст */
+            padding: 5px 10px; /* Отступы */
+            border-radius: 5px; /* Скругленные углы */
+            font-weight: bold; /* Жирный шрифт */
+            cursor: pointer; /* Курсор в виде руки */
+            transition: background-color 0.3s ease; /* Плавное изменение фона при наведении */
+        }
+
+        .delete-button:hover {
+            background-color: #333; /* Темный фон при наведении */
+        }
+    </style>
 </head>
 <body>
     <main id="main-holder">
@@ -21,134 +37,122 @@
     </main>
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const userId = localStorage.getItem("userId");
+            console.log("Полученный userId из localStorage:", userId);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const userId = localStorage.getItem("userId");
-    console.log("Полученный userId из localStorage:", userId);
-
-    if (userId) {
-       // fetchCartItems(userId); // Вызов функции с полученным userId
-       fetchUserProducts(userId)
-       fetchCartItems(userId)
-    } else {
-        console.log("userId отсутствует в localStorage.");
-    }
-});
-
-function fetchUserProducts(userId) {
-    console.log("Функция вызвана с userId:", userId);
-
-    if (!userId) {
-        console.log("Ошибка: не передан userId.");
-        return;
-    }
-
-    const url = `http://localhost:8080/api/products/show?userId=${userId}`; // Измените URL на правильный для вашего API
-    console.log("URL запроса:", url);
-
-    fetch(url)
-        .then(response => {
-            console.log("Ответ от сервера:", response);
-            if (!response.ok) {
-                throw new Error("Ошибка при получении данных о продуктах пользователя");
-            }
-            return response.json(); // Парсим JSON
-        })
-        .then(data => {
-            console.log("Данные, полученные от сервера:", data);
-
-            if (Array.isArray(data) && data.length > 0) {
-                // Обрабатываем массив данных
-                data.forEach(product => {
-                    console.log(`Продукт: ${product.productName}, Количество: ${product.quantity}, Цена: ${product.price}`);
-                });
-
-                // Обновляем DOM, например, список продуктов
-                const productsListElement = document.getElementById('products-list');
-                if (productsListElement) {
-                    productsListElement.innerHTML = ''; // Очищаем старые данные
-
-                    data.forEach(product => {
-                        const productElement = document.createElement('div');
-                        productElement.classList.add('product-item');
-                        productElement.innerHTML = `
-                            <h3>${product.productName}</h3>
-                            <p>Описание: ${product.description}</p>
-                            <p>Количество: ${product.quantity}</p>
-                            <p>Цена: ${product.price}</p>
-                            <img src="${product.imageUrl}" alt="${product.productName}" style="max-width: 100px;" />
-                        `;
-                        productsListElement.appendChild(productElement);
-                    });
-                }
+            if (userId) {
+               fetchUserProducts(userId);
+               fetchCartItems(userId);
             } else {
-                console.log("У пользователя нет продуктов или данные некорректны.");
-                const productsListElement = document.getElementById('products-list');
-                if (productsListElement) {
-                    productsListElement.innerHTML = `<p>У пользователя нет продуктов.</p>`;
-                }
+                console.log("userId отсутствует в localStorage.");
             }
-        })
-        .catch(error => {
-            console.error("Ошибка при запросе данных о продуктах пользователя:", error);
         });
-}
 
-
-           function fetchCartItems(userId) {
-    console.log("Функция вызвана с userId:", userId);
-
-    if (!userId) {
-        console.log("Ошибка: не передан userId.");
-        return;
-    }
-
-    const url = `http://localhost:8080/cart/show?userId=${userId}`;
-    console.log("URL запроса:", url);
-
-    fetch(url)
-        .then(response => {
-            console.log("Ответ от сервера:", response);
-            if (!response.ok) {
-                throw new Error("Ошибка при получении данных корзины");
+        function fetchUserProducts(userId) {
+            console.log("Функция вызвана с userId:", userId);
+            if (!userId) {
+                console.log("Ошибка: не передан userId.");
+                return;
             }
-            return response.json(); // Парсим JSON
-        })
-        .then(data => {
-            console.log("Данные, полученные от сервера:", data);
 
-            if (Array.isArray(data) && data.length > 0) {
-                // Пример обработки массива данных
-                let totalItems = 0;
-                data.forEach(item => {
-                    console.log(`Товар: ${item.productName}, Количество: ${item.quantity}`);
-                    totalItems += item.quantity; // Считаем общее количество
+            const url = `http://localhost:8080/api/products/show?userId=${userId}`;
+            console.log("URL запроса:", url);
+
+            fetch(url)
+                .then(response => {
+                    console.log("Ответ от сервера:", response);
+                    if (!response.ok) {
+                        throw new Error("Ошибка при получении данных о продуктах пользователя");
+                    }
+                    return response.json(); // Парсим JSON
+                })
+                .then(data => {
+                    console.log("Данные, полученные от сервера:", data);
+                    if (Array.isArray(data) && data.length > 0) {
+                        renderCartItems(data);
+                    } else {
+                        console.log("У пользователя нет продуктов или данные некорректны.");
+                        const productsListElement = document.getElementById('products-list');
+                        if (productsListElement) {
+                            productsListElement.innerHTML = `<p>У пользователя нет продуктов.</p>`;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка при запросе данных о продуктах пользователя:", error);
                 });
+        }
 
-                const cartCountElement = document.getElementById('cart-count');
-                if (cartCountElement) {
-                    cartCountElement.textContent = `Товары в корзине: ${totalItems}`;
-                }
-            } else if (data && typeof data === "object") {
-                // Если сервер возвращает объект
-                console.log(`Товар: ${data.productName}, Количество: ${data.quantity}`);
-                const cartCountElement = document.getElementById('cart-count');
-                if (cartCountElement) {
-                    cartCountElement.textContent = `Товары в корзине: ${data.quantity}`;
-                }
-            } else {
-                console.log("Корзина пуста или данные некорректны.");
-                const cartCountElement = document.getElementById('cart-count');
-                if (cartCountElement) {
-                    cartCountElement.textContent = `Корзина пуста`;
-                }
+        function fetchCartItems(userId) {
+            console.log("Функция вызвана с userId:", userId);
+            if (!userId) {
+                console.log("Ошибка: не передан userId.");
+                return;
             }
-        })
-        .catch(error => {
-            console.error("Ошибка при запросе корзины:", error);
-        });
-}
 
+            const url = `http://localhost:8080/cart/show?userId=${userId}`;
+            console.log("URL запроса:", url);
+
+            fetch(url)
+                .then(response => {
+                    console.log("Ответ от сервера:", response);
+                    if (!response.ok) {
+                        throw new Error("Ошибка при получении данных корзины");
+                    }
+                    return response.json(); // Парсим JSON
+                })
+                .then(data => {
+                    console.log("Данные, полученные от сервера:", data);
+                    if (Array.isArray(data) && data.length > 0) {
+                        renderCartItems(data);
+                    } else if (data && typeof data === "object") {
+                        console.log(`Товар: ${data.productName}, Количество: ${data.quantity}`);
+                    } else {
+                        console.log("Корзина пуста или данные некорректны.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка при запросе корзины:", error);
+                });
+        }
+
+        function renderCartItems(cartData) {
+            const cartList = document.getElementById('cart-list');
+            const emptyMessage = document.getElementById('empty-cart-message');
+            const checkoutButton = document.getElementById('checkout-button');
+            
+            cartList.innerHTML = ""; // Очищаем старые данные
+
+            emptyMessage.style.display = "none"; // Скрываем сообщение о пустой корзине
+            checkoutButton.style.display = "block"; // Показываем кнопку оформления заказа
+
+            cartData.forEach(item => {
+                // Вставляем данные товара в корзину
+                const cartItemElement = document.createElement('li');
+                cartItemElement.classList.add('cart-item');
+                cartItemElement.innerHTML = `
+                    <div class="cart-item-row">
+                        <strong>Товар:</strong> ${item.productName} 
+                        <strong>Количество:</strong> ${item.quantity} 
+                        <strong>Цена:</strong> ${item.price}₽
+                       <button class="delete-button cart-button" data-product-id="${item.productId}">Удалить</button>
+
+                    </div>
+                `;
+                cartList.appendChild(cartItemElement);
+
+                // Добавляем обработчик для кнопки удаления
+                const deleteButton = cartItemElement.querySelector('.delete-button');
+                deleteButton.addEventListener('click', () => {
+                    deleteCartItem(item.productId);
+                });
+            });
+        }
+
+
+
+        
     </script>
 </body>
 </html>
