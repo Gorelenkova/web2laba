@@ -28,6 +28,7 @@
     }
 });
     </script>
+    
 </head>    
 <body>
 
@@ -78,6 +79,19 @@
         <p>Наши товары</p>
     </div>
 
+
+<!-- слайдер -->
+
+    <marquee behavior="scroll" direction="left" scrollamount="15">
+        <img src="photo/botinki1.jpg" alt="Фото 1">
+        <img src="photo/botinki3.jpg" alt="Фото 2">
+        <img src="photo/botinki2.jpg" alt="Фото 3">
+        <img src="photo/man_botinki.jpg" alt="Фото 4">
+        <img src="photo/manBot2.jpg" alt="Фото 5">
+        <img src="photo/manBot3.jpg" alt="Фото 6">
+        <img src="photo/manBot4.jpg" alt="Фото 7">
+    </marquee>
+    
     <div class="text-container">
         <h2>Сити Класс – интернет-магазин недорогой обуви</h2>
         <p>В нашем интернет-магазине вы можете недорого купить мужскую и женскую обувь оптом и в розницу.</p>
@@ -143,6 +157,7 @@
             const userId = localStorage.getItem("userId");
             if (userId) {
                 logoutButton.style.display = "inline-block"; // Показываем кнопку "Выход"
+                fetchCartItems(userId);
             } else {
                 logoutButton.style.display = "none"; // Скрываем кнопку, если пользователь не авторизован
             }
@@ -157,8 +172,63 @@
                 });
             }
         });
+        
+//         function fetchCartItems(userId) {
+//     console.log("Функция вызвана с userId:", userId);
+
+//     if (!userId) {
+//         console.log("Ошибка: не передан userId.");
+//         return;
+//     }
+
+//     const url = `http://localhost:8080/cart/show?userId=${userId}`;
+//     console.log("URL запроса:", url);
+
+//     fetch(url)
+//         .then(response => {
+//             console.log("Ответ от сервера:", response);
+//             if (!response.ok) {
+//                 throw new Error("Ошибка при получении данных корзины");
+//             }
+//             return response.json(); // Парсим JSON
+//         })
+//         .then(data => {
+//             console.log("Данные, полученные от сервера:", data);
+
+//             if (Array.isArray(data) && data.length > 0) {
+//                 // Пример обработки массива данных
+//                 let totalItems = 0;
+//                 data.forEach(item => {
+//                     console.log(`Товар: ${item.productName}, Количество: ${item.quantity}`);
+//                     totalItems += item.quantity; // Считаем общее количество
+//                 });
+
+//                 const cartCountElement = document.getElementById('cart-count');
+//                 if (cartCountElement) {
+//                     cartCountElement.textContent = `Товары в корзине: ${totalItems}`;
+//                 }
+//             } else if (data && typeof data === "object") {
+//                 // Если сервер возвращает объект
+//                 console.log(`Товар: ${data.productName}, Количество: ${data.quantity}`);
+//                 const cartCountElement = document.getElementById('cart-count');
+//                 if (cartCountElement) {
+//                     cartCountElement.textContent = `Товары в корзине: ${data.quantity}`;
+//                 }
+//             } else {
+//                 console.log("Корзина пуста или данные некорректны.");
+//                 const cartCountElement = document.getElementById('cart-count');
+//                 if (cartCountElement) {
+//                     cartCountElement.textContent = `Корзина пуста`;
+//                 }
+//             }
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при запросе корзины:", error);
+//         });
+// }
+
     </script>
-git    
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const contactsButton = document.getElementById("contacts-button");

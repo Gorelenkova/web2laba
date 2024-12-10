@@ -20,8 +20,10 @@ document.getElementById("login-form").addEventListener("submit", function (event
             localStorage.setItem("userId", data.userId);
             console.log("UserId сохранен:", data.userId);
 
+            
             alert(data.message); // Показываем сообщение
             window.location.href = "index.html"; // Редирект
+            
         } else {
             alert(data.message); // Показываем сообщение об ошибке
         }
@@ -32,6 +34,8 @@ document.getElementById("login-form").addEventListener("submit", function (event
     });
 
 });
+
+
 
 // Функция для отображения сообщений
 function updateLoginMessage(message, success) {
