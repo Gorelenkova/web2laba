@@ -128,27 +128,58 @@
             checkoutButton.style.display = "block"; // Показываем кнопку оформления заказа
 
             cartData.forEach(item => {
-                // Вставляем данные товара в корзину
-                const cartItemElement = document.createElement('li');
-                cartItemElement.classList.add('cart-item');
-                cartItemElement.innerHTML = `
-                    <div class="cart-item-row">
-                        <strong>Товар:</strong> ${item.productName} 
-                        <strong>Количество:</strong> ${item.quantity} 
-                        <strong>Цена:</strong> ${item.price}₽
-                       <button class="delete-button cart-button" data-product-id="${item.productId}">Удалить</button>
+    const cartItemElement = document.createElement('li');
+    cartItemElement.classList.add('cart-item');
+    cartItemElement.innerHTML = `
+        <div class="cart-item-row">
+            <strong>Товар:</strong> ${item.productName} 
+            <strong>Количество:</strong> ${item.quantity} 
+            <strong>Цена:</strong> ${item.price}₽
+            <button class="delete-button cart-button" data-product-id="${item.id}">Удалить</button>
+        </div>
+    `;
+    cartList.appendChild(cartItemElement);
 
-                    </div>
-                `;
-                cartList.appendChild(cartItemElement);
+    // Добавляем обработчик для кнопки удаления
+    const deleteButton = cartItemElement.querySelector('.delete-button');
+    deleteButton.addEventListener('click', () => {
+        deleteCartItem(item.id); // Заменено на item.id
+    });
+});
 
-                // Добавляем обработчик для кнопки удаления
-                const deleteButton = cartItemElement.querySelector('.delete-button');
-                deleteButton.addEventListener('click', () => {
-                    deleteCartItem(item.productId);
-                });
-            });
         }
+
+        function deleteCartItem(productId) {
+    if (!productId) {
+        console.error("Ошибка: productId отсутствует или некорректен.");
+        return;
+    }
+
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+        console.error("Ошибка: userId отсутствует в localStorage.");
+        return;
+    }
+
+    // Формируем URL с параметрами
+    const url = `http://localhost:8080/cart/delate?productId=${productId}&userId=${userId}`;
+
+    fetch(url, {
+        method: "DELETE",
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Ошибка при удалении товара из корзины");
+            }
+            console.log(`Товар с ID ${productId} успешно удален из корзины пользователя с ID ${userId}.`);
+            // Перезагружаем корзину после успешного удаления
+            fetchCartItems(userId);
+        })
+        .catch(error => {
+            console.error("Ошибка при удалении товара из корзины:", error);
+        });
+}
+
 
 
 
