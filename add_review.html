@@ -5,10 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отзывы</title>
     <link rel="stylesheet" href="style/styleReview.css">
+    <style>
+        /* Стили для кнопки */
+        #back-to-home {
+            position: absolute; /* Устанавливаем кнопку в левый верхний угол */
+            top: 10px; /* Отступ сверху */
+            left: 10px; /* Отступ слева */
+            padding: 10px 20px; /* Внутренние отступы */
+            background-color: black; /* Черный фон */
+            color: white; /* Белый цвет текста */
+            border: none; /* Убираем стандартные границы */
+            border-radius: 5px; /* Скругленные углы */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Курсор в виде руки при наведении */
+        }
+
+        #back-to-home:hover {
+            background-color: #444; /* Цвет фона при наведении */
+        }
+    </style>
 </head>
 <body>
     <main id="main-holder">
         <h1 id="reviews-heading">Отзывы</h1>
+        
+        <button id="back-to-home" onclick="window.location.href='index.html';">Вернуться на главную</button>
 
         <!-- Форма для добавления отзыва -->
         <form id="review-form">
@@ -23,47 +44,40 @@
     </main>
 
     <script>
-        function updateReviewMessage(message) {
+        // Функция для обновления сообщения на странице с учетом статуса (успех или ошибка)
+        function updateReviewMessage(message, isSuccess = false) {
             const reviewMessage = document.getElementById("review-message");
             reviewMessage.textContent = message;
+
+            if (isSuccess) {
+                // Устанавливаем зеленый цвет для успешного сообщения
+                reviewMessage.classList.add("success-message");
+                reviewMessage.classList.remove("error-message"); // Убираем красный стиль, если был
+            } else {
+                // Устанавливаем красный цвет для ошибки
+                reviewMessage.classList.add("error-message");
+                reviewMessage.classList.remove("success-message"); // Убираем зеленый стиль, если был
+            }
         }
 
-        function fetchReviews() {
-            const url = "http://localhost:7129/api/Response/AddResponse";
+        // Функция для отправки отзыва
+        function submitReview(event) {
+            event.preventDefault(); // Предотвращаем стандартное поведение формы (перезагрузку страницы)
 
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Ошибка HTTP: ${response.status}`);
-                    }
-                    return response.json(); // Возвращаем JSON, так как сервер должен возвращать JSON
-                })
-                .then(data => {
-                    const reviewsContainer = document.getElementById("reviews-container");
-                    reviewsContainer.innerHTML = ""; // Очистить контейнер перед обновлением
+            const userId = localStorage.getItem("userId"); // Получаем userId из localStorage
+            const comment = document.getElementById("comment-field").value; // Получаем комментарий
 
-                    if (data && data.data) {
-                        data.data.forEach(response => {
-                            const responseElement = document.createElement("div");
-                            responseElement.classList.add("response");
-                            responseElement.innerHTML = `<div class="user-info">Пользователь #${response.userId}</div>
-                                                      <div class="response-text">${response.comment}</div>`;
-                            reviewsContainer.appendChild(responseElement);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error(`Произошла ошибка при получении отзывов: ${error.message}`);
-                });
-        }
+            if (!userId) {
+                updateReviewMessage("Ошибка: Не удалось получить ID пользователя.", false);
+                return;
+            }
 
-        document.getElementById("review-form").addEventListener("submit", function (event) {
-            event.preventDefault();
+            if (!comment) {
+                updateReviewMessage("Ошибка: Отзыв не может быть пустым.", false);
+                return;
+            }
 
-            const comment = document.getElementById("comment-field").value;
-            const userId = localStorage.getItem("userId");
-
-            const url = "https://localhost:7129/api/Response/AddResponse";
+            const url = `http://localhost:8080/review/add?id=${userId}&reviewConten=${encodeURIComponent(comment)}`;
 
             fetch(url, {
                 method: "POST",
@@ -80,23 +94,29 @@
                 if (!response.ok) {
                     throw new Error(`Ошибка HTTP: ${response.status}`);
                 }
-                return response.json();
+                return response.text();
             })
             .then(data => {
-                if (data && data.statusCode === 200) {
-                    console.log("Отзыв успешно добавлен!");
-                    updateReviewMessage("Отзыв успешно добавлен!");
-                    fetchReviews(); // Обновить отзывы после успешного добавления
-                }
+                console.log(data); // Выводим сообщение от сервера
+                updateReviewMessage(data, true); // Отображаем сообщение как успешное
+                fetchReviews(); // Обновляем отзывы после успешного добавления
+                document.getElementById("comment-field").value = ''; // Очищаем поле после отправки отзыва
             })
             .catch(error => {
-                console.error("Произошла ошибка при добавлении отзыва.", error);
-                updateReviewMessage("Произошла ошибка при добавлении отзыва.");
+                console.error("Произошла ошибка при добавлении отзыва:", error);
+                updateReviewMessage("Произошла ошибка при добавлении отзыва.", false);
             });
-        });
+        }
 
-        // Вызов функции fetchReviews для получения и отображения отзывов при загрузке страницы
-        fetchReviews();
+        // Функция для получения отзывов (можно доработать под нужды)
+        function fetchReviews() {
+            // Здесь должна быть логика для получения и отображения отзывов
+            // На данный момент, функция только вызывает обновление страницы
+            console.log("Функция для получения отзывов вызывается");
+        }
+
+        // Добавляем обработчик на форму для отправки отзыва
+        document.getElementById("review-form").addEventListener("submit", submitReview);
     </script>
 </body>
 </html>

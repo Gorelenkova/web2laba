@@ -43,34 +43,46 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Выполняем GET-запрос при загрузке страницы
-            fetch('https://localhost:7129/api/Response/GetAllResponse')
-                .then(response => response.json())
-                .then(data => {
-                    const reviewsContainer = document.getElementById('reviewsContainer');
+        document.getElementById("reviewForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Остановка стандартной отправки формы
 
-                    // Добавляем отзывы на страницу
-                    data.data.forEach(review => {
-                        const reviewDiv = document.createElement('div');
-                        reviewDiv.classList.add('review');
+    // Получаем ID пользователя из localStorage
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+        alert("Пользователь не авторизован! Пожалуйста, войдите в систему.");
+        return;
+    }
 
-                        const userInfoDiv = document.createElement('div');
-                        userInfoDiv.classList.add('user-info');
-                        userInfoDiv.textContent = `${review.name}, ${review.email}`;
-                        
-                        const reviewTextDiv = document.createElement('div');
-                        reviewTextDiv.classList.add('review-text');
-                        reviewTextDiv.textContent = review.message;
+    // Получаем текст отзыва из формы
+    const reviewContent = document.getElementById("reviewContent").value.trim();
 
-                        reviewDiv.appendChild(userInfoDiv);
-                        reviewDiv.appendChild(reviewTextDiv);
+    // Проверяем, введен ли текст отзыва
+    if (!reviewContent) {
+        alert("Введите текст отзыва!");
+        return;
+    }
 
-                        reviewsContainer.appendChild(reviewDiv);
-                    });
-                })
-                .catch(error => console.error('Ошибка при выполнении GET-запроса:', error));
+    // Отправка POST-запроса
+    fetch(`http://localhost:8080/review/add?id=${userId}&reviewConten=${encodeURIComponent(reviewContent)}`, {
+        method: "POST",
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Ошибка сервера: ${response.statusText}`);
+            }
+            return response.text(); // Сервер вернет сообщение
+        })
+        .then(data => {
+            alert("Ваш отзыв успешно добавлен!");
+            console.log(data); // Для отладки
+            document.getElementById("reviewContent").value = ""; // Очистить форму
+        })
+        .catch(error => {
+            console.error("Ошибка при отправке отзыва:", error);
+            alert("Произошла ошибка при добавлении отзыва. Попробуйте позже.");
         });
+});
+
     </script>
 </body>
 </html>
